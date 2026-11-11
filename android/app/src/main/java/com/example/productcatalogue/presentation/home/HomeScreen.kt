@@ -1,6 +1,7 @@
 
 package com.example.productcatalogue.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +31,8 @@ import com.example.productcatalogue.data.model.Product
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    onProductClick: (Int) -> Unit
 ) {
     // Observe ViewModel state.
     val uiState by viewModel.uiState.collectAsState()
@@ -85,7 +87,10 @@ fun HomeScreen(
                         items = uiState.products,
                         key = { product -> product.id }
                     ) { product ->
-                        ProductCard(product = product)
+                        ProductCard(
+                            product = product,
+                            onClick = { onProductClick(product.id) }
+                        )
                     }
                 }
             }
@@ -94,9 +99,14 @@ fun HomeScreen(
 }
 
 @Composable
-private fun ProductCard(product: Product) {
+private fun ProductCard(
+    product: Product,
+    onClick: () -> Unit
+)  {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
